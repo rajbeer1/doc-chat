@@ -27,10 +27,13 @@ interface ChatState {
   requiresPhone: boolean;
 }
 class ChatService {
-  private baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3001/api/chat";
+  private baseURL: string;
   private token: string | null = null;
 
   constructor() {
+    this.baseURL =
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      "https://docchat.scorebadhao.com/api/chat";
     if (typeof window !== "undefined") {
       this.token = localStorage.getItem("jwt_token");
     }
@@ -186,8 +189,18 @@ export default function Home() {
         const latestChat = chats[0];
 
         const convertedMessages: Message[] = latestChat.messages.map(
-          (msg: any, index: number) => ({
-            id: msg._id || `${msg.isAIResponse ? 'doctor' : 'user'}-${Date.now()}-${index}`,
+          (
+            msg: {
+              _id?: string;
+              content: string;
+              isAIResponse: boolean;
+              createdAt: string;
+            },
+            index: number
+          ) => ({
+            id:
+              msg._id ||
+              `${msg.isAIResponse ? "doctor" : "user"}-${Date.now()}-${index}`,
             text: msg.content,
             sender: msg.isAIResponse ? "doctor" : "user",
             timestamp: new Date(msg.createdAt),
@@ -237,9 +250,13 @@ export default function Home() {
         isOtpSent: true,
         isLoading: false,
       }));
-    } catch (error: any) {
+    } catch (error: unknown) {
       setChatState((prev) => ({ ...prev, isLoading: false }));
-      alert(error.message || "Failed to send OTP. Please try again.");
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to send OTP. Please try again.";
+      alert(errorMessage);
     }
   };
 
@@ -266,9 +283,13 @@ export default function Home() {
         requiresPhone: false,
         isOtpSent: false,
       }));
-    } catch (error: any) {
+    } catch (error: unknown) {
       setChatState((prev) => ({ ...prev, isLoading: false }));
-      alert(error.message || "Invalid OTP. Please try again.");
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Invalid OTP. Please try again.";
+      alert(errorMessage);
     }
   };
 
@@ -314,8 +335,12 @@ export default function Home() {
         streamingMessage: "",
         chatCount: prev.chatCount + 1,
       }));
-    } catch (error: any) {
-      if (error.message.includes("Phone verification required")) {
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to send message. Please try again.";
+      if (errorMessage.includes("Phone verification required")) {
         setChatState((prev) => ({
           ...prev,
           messages: prev.messages.slice(0, -1),
@@ -330,7 +355,7 @@ export default function Home() {
           isLoading: false,
           isStreaming: false,
         }));
-        alert(error.message || "Failed to send message. Please try again.");
+        alert(errorMessage);
       }
     }
   };
@@ -402,9 +427,6 @@ export default function Home() {
           }
           onSendOtp={handleSendOtp}
           onVerifyOtp={handleVerifyOtp}
-          onBackToPhone={() =>
-            setChatState((prev) => ({ ...prev, isOtpSent: false }))
-          }
           onClosePhoneModal={() =>
             setChatState((prev) => ({ ...prev, requiresPhone: false }))
           }

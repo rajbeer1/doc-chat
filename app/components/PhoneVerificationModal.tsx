@@ -14,7 +14,6 @@ interface PhoneVerificationModalProps {
   onOtpChange: (value: string) => void;
   onSendOtp: () => void;
   onVerifyOtp: () => void;
-  onBackToPhone: () => void;
   onClose: () => void;
 }
 
@@ -28,7 +27,6 @@ export default function PhoneVerificationModal({
   onOtpChange,
   onSendOtp,
   onVerifyOtp,
-  onBackToPhone,
   onClose,
 }: PhoneVerificationModalProps) {
   if (!isOpen) return null;
@@ -64,7 +62,7 @@ export default function PhoneVerificationModal({
 
         <div className="p-4">
           <p className="text-sm text-stone-600 mb-4">
-            You've reached the chat limit. Please verify your phone number to
+            You&apos;ve reached the chat limit. Please verify your phone number to
             continue.
           </p>
 
@@ -94,7 +92,7 @@ export default function PhoneVerificationModal({
                 </div>
               </div>
               <p className="text-xs text-stone-500">
-                You've reached the chat limit. Please verify your phone
+                You&apos;ve reached the chat limit. Please verify your phone
                 number to continue chatting.
               </p>
             </div>

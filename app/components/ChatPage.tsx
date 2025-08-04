@@ -32,7 +32,6 @@ interface ChatPageProps {
   onOtpChange: (value: string) => void;
   onSendOtp: () => void;
   onVerifyOtp: () => void;
-  onBackToPhone: () => void;
   onClosePhoneModal: () => void;
   // Chat props
   onNewMessageChange: (value: string) => void;
@@ -62,7 +61,6 @@ export default function ChatPage({
   onOtpChange,
   onSendOtp,
   onVerifyOtp,
-  onBackToPhone,
   onClosePhoneModal,
   onNewMessageChange,
   onSendMessage,
@@ -78,7 +76,7 @@ export default function ChatPage({
       console.log("onLoadInitialChat");
       onLoadInitialChat();
     }
-  }, [messages.length, hasToken]);
+  }, [messages.length, hasToken, onLoadInitialChat]);
 
   return (
     <div className="min-h-screen bg-stone-50 flex flex-col relative">
@@ -213,7 +211,6 @@ export default function ChatPage({
         onOtpChange={onOtpChange}
         onSendOtp={onSendOtp}
         onVerifyOtp={onVerifyOtp}
-        onBackToPhone={onBackToPhone}
         onClose={onClosePhoneModal}
       />
     </div>
