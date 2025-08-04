@@ -42,6 +42,7 @@ interface ChatPageProps {
   onKeyPress: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
   onLoadInitialChat?: () => void;
+  isFetchingChats?: boolean;
 }
 
 export default function ChatPage({
@@ -70,6 +71,7 @@ export default function ChatPage({
   onKeyPress,
   messagesEndRef,
   onLoadInitialChat,
+  isFetchingChats = false,
 }: ChatPageProps) {
   useEffect(() => {
     if (messages.length === 0 && !hasToken && onLoadInitialChat) {
@@ -103,7 +105,10 @@ export default function ChatPage({
                       e.target.value as "gynecologist" | "general_practitioner"
                     )
                   }
-                  className="text-sm border border-stone-300 rounded px-2 py-1 bg-white"
+                  disabled={isFetchingChats}
+                  className={`text-sm border border-stone-300 rounded px-2 py-1 ${
+                    isFetchingChats ? "bg-stone-100 text-stone-500" : "bg-white"
+                  }`}
                 >
                   <option value="general_practitioner">
                     General Practitioner
@@ -116,10 +121,15 @@ export default function ChatPage({
                   variant="ghost"
                   size="sm"
                   onClick={onReloadChats}
+                  disabled={isFetchingChats}
                   className="text-stone-600"
                   title="Reload chats"
                 >
-                  ↻
+                  {isFetchingChats ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-stone-600"></div>
+                  ) : (
+                    "↻"
+                  )}
                 </Button>
               )}
             </div>
@@ -130,6 +140,14 @@ export default function ChatPage({
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-4">
         <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-4">
+          {isFetchingChats && messages.length === 0 && (
+            <div className="flex justify-center items-center py-8">
+              <div className="flex items-center space-x-2 text-stone-600">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-stone-600"></div>
+                <span className="text-sm">Loading chat history...</span>
+              </div>
+            </div>
+          )}
           {messages.map((message) => (
             <div
               key={message.id}
@@ -176,24 +194,23 @@ export default function ChatPage({
         </div>
       </div>
 
-      {/* Message Input */}
       <div className="bg-white border-t border-stone-200 px-4 py-3">
         <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto">
           <div className="flex space-x-2">
             <Input
               type="text"
-              placeholder="Type your message..."
+              placeholder={isFetchingChats ? "Loading chat history..." : "Type your message..."}
               value={newMessage}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 onNewMessageChange(e.target.value)
               }
               onKeyPress={onKeyPress}
-              disabled={isLoading}
+              disabled={isLoading || isFetchingChats}
               className="flex-1"
             />
             <Button
               onClick={onSendMessage}
-              disabled={!newMessage.trim() || isLoading}
+              disabled={!newMessage.trim() || isLoading || isFetchingChats}
               className="bg-stone-600 hover:bg-stone-700"
             >
               <Send className="w-4 h-4" />

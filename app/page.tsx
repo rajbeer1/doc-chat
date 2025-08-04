@@ -159,6 +159,8 @@ export default function Home() {
     requiresPhone: false,
   });
 
+  const [isFetchingChats, setIsFetchingChats] = useState(false);
+
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatService = useRef(new ChatService());
@@ -180,6 +182,7 @@ export default function Home() {
   }, []);
 
   const loadExistingChatsForType = async (doctorType: string) => {
+    setIsFetchingChats(true);
     try {
       console.log("doctorType", doctorType);
       const chats = await chatService.current.getChats(doctorType);
@@ -227,6 +230,8 @@ export default function Home() {
         messages: [],
         chatCount: 0,
       }));
+    } finally {
+      setIsFetchingChats(false);
     }
   };
 
@@ -438,6 +443,7 @@ export default function Home() {
           onKeyPress={handleKeyPress}
           messagesEndRef={messagesEndRef}
           onLoadInitialChat={handleLoadInitialChat}
+          isFetchingChats={isFetchingChats}
         />
       </div>
     );
