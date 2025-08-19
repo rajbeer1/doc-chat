@@ -31,13 +31,12 @@ export default function GynoChatPage() {
     setIsClient(true);
   }, []);
 
-
   if (!isClient) {
     return <LoadingSpinner />;
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="chat-container h-screen bg-stone-50">
       <ChatPage
         messages={chatState.messages}
         newMessage={newMessage}

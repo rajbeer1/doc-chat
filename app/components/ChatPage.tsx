@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Send } from "lucide-react";
 import PhoneVerificationModal from "./PhoneVerificationModal";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface Message {
@@ -75,6 +75,8 @@ export default function ChatPage({
   isFetchingChats = false,
 }: ChatPageProps) {
   const router = useRouter();
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
   useEffect(() => {
     if (typeof window !== 'undefined' && messages.length === 0 && !hasToken && onLoadInitialChat) {
       console.log("onLoadInitialChat");
@@ -82,8 +84,74 @@ export default function ChatPage({
     }
   }, [messages.length, hasToken, onLoadInitialChat]);
 
+  // Detect keyboard open/close on mobile
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleResize = () => {
+      const visualViewport = (window as any).visualViewport;
+      if (visualViewport) {
+        const keyboardHeight = window.innerHeight - visualViewport.height;
+        setIsKeyboardOpen(keyboardHeight > 150); // Consider keyboard open if height difference > 150px
+      } else {
+        // Fallback for browsers without visualViewport
+        const heightDiff = window.innerHeight - window.outerHeight;
+        setIsKeyboardOpen(heightDiff > 150);
+      }
+    };
+
+    const handleFocus = () => {
+      // Add a small delay to let the keyboard animation complete
+      setTimeout(() => {
+        handleResize();
+      }, 300);
+    };
+
+    const handleBlur = () => {
+      setIsKeyboardOpen(false);
+    };
+
+    // Listen for viewport changes
+    if ((window as any).visualViewport) {
+      (window as any).visualViewport.addEventListener('resize', handleResize);
+    } else {
+      window.addEventListener('resize', handleResize);
+    }
+
+    // Listen for input focus/blur
+    const inputs = document.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+      input.addEventListener('focus', handleFocus);
+      input.addEventListener('blur', handleBlur);
+    });
+
+    return () => {
+      if ((window as any).visualViewport) {
+        (window as any).visualViewport.removeEventListener('resize', handleResize);
+      } else {
+        window.removeEventListener('resize', handleResize);
+      }
+      
+      inputs.forEach(input => {
+        input.removeEventListener('focus', handleFocus);
+        input.removeEventListener('blur', handleBlur);
+      });
+    };
+  }, []);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Scroll to bottom when keyboard opens or new messages arrive
+  useEffect(() => {
+    if (isKeyboardOpen || messages.length > 0) {
+      setTimeout(scrollToBottom, 100);
+    }
+  }, [isKeyboardOpen, messages.length]);
+
   return (
-    <div className="h-screen bg-stone-50 flex flex-col relative">
+    <div className={`chat-container h-screen bg-stone-50 flex flex-col relative ${isKeyboardOpen ? 'keyboard-open' : ''}`}>
       {/* Chat Header - Fixed at top */}
       <div className="bg-white border-b border-stone-200 px-4 py-3 flex-shrink-0">
         <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto flex items-center justify-between">
@@ -143,7 +211,7 @@ export default function ChatPage({
       </div>
 
       {/* Messages - Scrollable area that takes remaining space */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0">
+      <div className="chat-messages flex-1 overflow-y-auto px-4 py-4 min-h-0">
         <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-4">
           {isFetchingChats && messages.length === 0 && (
             <div className="flex justify-center items-center py-8">
@@ -200,7 +268,7 @@ export default function ChatPage({
       </div>
 
       {/* Input Area - Fixed at bottom */}
-      <div className="bg-white border-t border-stone-200 px-4 py-3 flex-shrink-0">
+      <div className="chat-input bg-white border-t border-stone-200 px-4 py-3 flex-shrink-0">
         <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto">
           <div className="flex space-x-2">
             <Input

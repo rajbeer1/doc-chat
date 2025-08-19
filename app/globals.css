@@ -118,6 +118,17 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Prevent body scroll and ensure proper mobile viewport */
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+  
+  html {
+    /* Ensure proper mobile viewport handling */
+    height: 100%;
+    overflow: hidden;
   }
 }
 
@@ -138,10 +149,55 @@
   .h-screen {
     height: 100vh;
     height: 100dvh; /* Dynamic viewport height for mobile */
+    min-height: 100vh;
+    min-height: 100dvh;
   }
   
   /* Prevent body scroll when chat is open */
   body.chat-open {
     overflow: hidden;
+  }
+  
+  /* Fix for mobile bottom gap and keyboard issues */
+  @media screen and (max-width: 768px) {
+    .h-screen {
+      height: 100vh;
+      height: 100dvh;
+      height: -webkit-fill-available;
+    }
+    
+    /* Ensure chat container takes full height */
+    .chat-container {
+      height: 100vh;
+      height: 100dvh;
+      height: -webkit-fill-available;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    /* Fix for keyboard open state */
+    .chat-container.keyboard-open {
+      height: 100vh;
+      height: 100dvh;
+      height: -webkit-fill-available;
+    }
+    
+    /* Ensure messages area fills available space */
+    .chat-messages {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Ensure input stays at bottom */
+    .chat-input {
+      flex-shrink: 0;
+      position: sticky;
+      bottom: 0;
+      background: white;
+      z-index: 10;
+    }
   }
 }
