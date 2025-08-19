@@ -46,6 +46,12 @@ interface ChatPageProps {
   isFetchingChats?: boolean;
 }
 
+// Type for VisualViewport API
+interface VisualViewport extends EventTarget {
+  height: number;
+  width: number;
+}
+
 export default function ChatPage({
   messages,
   newMessage,
@@ -67,7 +73,6 @@ export default function ChatPage({
   onNewMessageChange,
   onSendMessage,
   onDoctorTypeChange,
-  onResetChat,
   onReloadChats,
   onKeyPress,
   messagesEndRef,
@@ -89,7 +94,7 @@ export default function ChatPage({
     if (typeof window === 'undefined') return;
 
     const handleResize = () => {
-      const visualViewport = (window as any).visualViewport;
+      const visualViewport = (window as { visualViewport?: VisualViewport }).visualViewport;
       if (visualViewport) {
         const keyboardHeight = window.innerHeight - visualViewport.height;
         setIsKeyboardOpen(keyboardHeight > 150); // Consider keyboard open if height difference > 150px
@@ -112,27 +117,28 @@ export default function ChatPage({
     };
 
     // Listen for viewport changes
-    if ((window as any).visualViewport) {
-      (window as any).visualViewport.addEventListener('resize', handleResize);
+    const visualViewport = (window as { visualViewport?: VisualViewport }).visualViewport;
+    if (visualViewport) {
+      visualViewport.addEventListener('resize', handleResize);
     } else {
       window.addEventListener('resize', handleResize);
     }
 
     // Listen for input focus/blur
     const inputs = document.querySelectorAll('input, textarea');
-    inputs.forEach(input => {
+    inputs.forEach((input: Element) => {
       input.addEventListener('focus', handleFocus);
       input.addEventListener('blur', handleBlur);
     });
 
     return () => {
-      if ((window as any).visualViewport) {
-        (window as any).visualViewport.removeEventListener('resize', handleResize);
+      if (visualViewport) {
+        visualViewport.removeEventListener('resize', handleResize);
       } else {
         window.removeEventListener('resize', handleResize);
       }
       
-      inputs.forEach(input => {
+      inputs.forEach((input: Element) => {
         input.removeEventListener('focus', handleFocus);
         input.removeEventListener('blur', handleBlur);
       });
@@ -171,6 +177,7 @@ export default function ChatPage({
                   value={doctorType}
                   onChange={(e) => {
                     const newType = e.target.value as "gynecologist" | "general_practitioner";
+                    onDoctorTypeChange(newType);
                     if (newType === "gynecologist") {
                       router.push("/chat/gyno");
                     } else {

@@ -3,11 +3,9 @@
 import { useChat } from "@/lib/useChat";
 import ChatPage from "../../components/ChatPage";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function GeneralChatPage() {
-  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const {
     chatState,
