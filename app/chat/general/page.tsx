@@ -3,9 +3,11 @@
 import { useChat } from "@/lib/useChat";
 import ChatPage from "../../components/ChatPage";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function GeneralChatPage() {
+  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const {
     chatState,
@@ -34,41 +36,43 @@ export default function GeneralChatPage() {
   }
 
   return (
-    <div className="chat-container h-screen bg-stone-50">
-      <ChatPage
-        messages={chatState.messages}
-        newMessage={newMessage}
-        doctorType={chatState.doctorType}
-        isLoading={chatState.isLoading}
-        isStreaming={chatState.isStreaming}
-        streamingMessage={chatState.streamingMessage}
-        hasToken={!!chatService.getToken()}
-        requiresPhone={chatState.requiresPhone}
-        phoneNumber={chatState.phoneNumber}
-        otp={chatState.otp}
-        isOtpSent={chatState.isOtpSent}
-        isOtpLoading={chatState.isLoading}
-        onPhoneNumberChange={(value: string) =>
-          setChatState((prev) => ({ ...prev, phoneNumber: value }))
-        }
-        onOtpChange={(value: string) =>
-          setChatState((prev) => ({ ...prev, otp: value }))
-        }
-        onSendOtp={handleSendOtp}
-        onVerifyOtp={handleVerifyOtp}
-        onClosePhoneModal={() =>
-          setChatState((prev) => ({ ...prev, requiresPhone: false }))
-        }
-        onNewMessageChange={setNewMessage}
-        onSendMessage={handleSendMessage}
-        onDoctorTypeChange={handleDoctorTypeChange}
-        onResetChat={resetChat}
-        onReloadChats={loadExistingChats}
-        onKeyPress={handleKeyPress}
-        messagesEndRef={messagesEndRef}
-        onLoadInitialChat={handleLoadInitialChat}
-        isFetchingChats={isFetchingChats}
-      />
+    <div className="chat-page">
+      <div className="chat-container h-screen bg-stone-50">
+        <ChatPage
+          messages={chatState.messages}
+          newMessage={newMessage}
+          doctorType={chatState.doctorType}
+          isLoading={chatState.isLoading}
+          isStreaming={chatState.isStreaming}
+          streamingMessage={chatState.streamingMessage}
+          hasToken={!!chatService.getToken()}
+          requiresPhone={chatState.requiresPhone}
+          phoneNumber={chatState.phoneNumber}
+          otp={chatState.otp}
+          isOtpSent={chatState.isOtpSent}
+          isOtpLoading={chatState.isLoading}
+          onPhoneNumberChange={(value: string) =>
+            setChatState((prev) => ({ ...prev, phoneNumber: value }))
+          }
+          onOtpChange={(value: string) =>
+            setChatState((prev) => ({ ...prev, otp: value }))
+          }
+          onSendOtp={handleSendOtp}
+          onVerifyOtp={handleVerifyOtp}
+          onClosePhoneModal={() =>
+            setChatState((prev) => ({ ...prev, requiresPhone: false }))
+          }
+          onNewMessageChange={setNewMessage}
+          onSendMessage={handleSendMessage}
+          onDoctorTypeChange={handleDoctorTypeChange}
+          onResetChat={resetChat}
+          onReloadChats={loadExistingChats}
+          onKeyPress={handleKeyPress}
+          messagesEndRef={messagesEndRef}
+          onLoadInitialChat={handleLoadInitialChat}
+          isFetchingChats={isFetchingChats}
+        />
+      </div>
     </div>
   );
 }

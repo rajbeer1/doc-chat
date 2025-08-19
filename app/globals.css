@@ -118,17 +118,10 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Prevent body scroll and ensure proper mobile viewport */
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-    height: 100%;
   }
   
   html {
-    /* Ensure proper mobile viewport handling */
     height: 100%;
-    overflow: hidden;
   }
 }
 
@@ -153,8 +146,19 @@
     min-height: 100dvh;
   }
   
-  /* Prevent body scroll when chat is open */
-  body.chat-open {
+  /* Chat-specific styles - only apply overflow hidden to chat pages */
+  .chat-page {
+    overflow: hidden;
+  }
+  
+  .chat-page body {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .chat-page html {
     overflow: hidden;
   }
   
