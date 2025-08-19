@@ -327,9 +327,6 @@ export default function ChatPage({
                 />
               </div>
               <div className="max-w-[75%] sm:max-w-sm lg:max-w-md px-4 py-3 rounded-2xl bg-white border border-gray-200 text-gray-900 shadow-sm">
-                <p className="text-sm sm:text-base break-words leading-relaxed">
-                  {streamingMessage || "Typing..."}
-                </p>
                 <div className="flex space-x-1 mt-2">
                   <div className={`w-2 h-2 ${primaryColor} rounded-full animate-bounce`}></div>
                   <div className={`w-2 h-2 ${primaryColor} rounded-full animate-bounce`} style={{ animationDelay: '0.1s' }}></div>
