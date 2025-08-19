@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Send } from "lucide-react";
 import PhoneVerificationModal from "./PhoneVerificationModal";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 interface Message {
@@ -139,16 +139,15 @@ export default function ChatPage({
     };
   }, []);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, [messagesEndRef]);
 
-  // Scroll to bottom when keyboard opens or new messages arrive
   useEffect(() => {
     if (isKeyboardOpen || messages.length > 0) {
       setTimeout(scrollToBottom, 100);
     }
-  }, [isKeyboardOpen, messages.length]);
+  }, [isKeyboardOpen, messages.length, scrollToBottom]);
 
   return (
     <div className={`chat-container h-screen bg-stone-50 flex flex-col relative ${isKeyboardOpen ? 'keyboard-open' : ''}`}>
