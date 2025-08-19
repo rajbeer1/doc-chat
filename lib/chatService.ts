@@ -16,7 +16,7 @@ export interface ChatState {
   isLoading: boolean;
   isStreaming: boolean;
   streamingMessage: string;
-  doctorType: "gynecologist" | "general_practitioner";
+  doctorType: "pregnancy_coach" | "health_coach";
   chatCount: number;
   maxChats: number;
   requiresPhone: boolean;

@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { ChatService, ChatState, Message } from "./chatService";
 
-export function useChat(doctorType: "gynecologist" | "general_practitioner") {
+export function useChat(doctorType: "pregnancy_coach" | "health_coach") {
   const [chatState, setChatState] = useState<ChatState>({
     isAuthenticated: false,
     isOtpSent: false,
@@ -251,7 +251,7 @@ export function useChat(doctorType: "gynecologist" | "general_practitioner") {
   };
 
   const handleDoctorTypeChange = (
-    type: "gynecologist" | "general_practitioner"
+    type: "pregnancy_coach" | "health_coach"
   ) => {
     setChatState((prev) => {
       const newState = { ...prev, doctorType: type };

@@ -7,7 +7,7 @@ export default function ChatPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/chat/general");
+    router.push("/chat/health-coach");
   }, [router]);
 
   return null;

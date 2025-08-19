@@ -5,7 +5,7 @@ import ChatPage from "../../components/ChatPage";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useEffect, useState } from "react";
 
-export default function GynoChatPage() {
+export default function HealthCoachChatPage() {
   const [isClient, setIsClient] = useState(false);
   const {
     chatState,
@@ -23,7 +23,7 @@ export default function GynoChatPage() {
     loadExistingChats,
     handleLoadInitialChat,
     setChatState,
-  } = useChat("gynecologist");
+  } = useChat("health_coach");
 
   useEffect(() => {
     setIsClient(true);

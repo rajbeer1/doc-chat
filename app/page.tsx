@@ -9,20 +9,20 @@ import { useState } from "react";
 export default function Home() {
   const router = useRouter();
   const [doctorType, setDoctorType] = useState<
-    "gynecologist" | "general_practitioner"
-  >("general_practitioner");
+    "pregnancy_coach" | "health_coach"
+  >("health_coach");
 
   const handleStartChat = () => {
-    if (doctorType === "gynecologist") {
-      router.push("/chat/gyno");
+    if (doctorType === "pregnancy_coach") {
+      router.push("/chat/pregnancy-coach");
     } else {
-      router.push("/chat/general");
+      router.push("/chat/health-coach");
     }
   };
 
-  const isGyno = doctorType === "gynecologist";
-  const primaryColor = isGyno ? "bg-emerald-600" : "bg-blue-600";
-  const primaryHoverColor = isGyno
+  const isPregnancyCoach = doctorType === "pregnancy_coach";
+  const primaryColor = isPregnancyCoach ? "bg-emerald-600" : "bg-blue-600";
+  const primaryHoverColor = isPregnancyCoach
     ? "hover:bg-emerald-700"
     : "hover:bg-blue-700";
 
@@ -56,33 +56,33 @@ export default function Home() {
               <div className="grid grid-cols-1 gap-3 sm:gap-4">
                 <div
                   className={`relative p-3 sm:p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 min-h-[80px] sm:min-h-[100px] flex items-center ${
-                    doctorType === "general_practitioner"
+                    doctorType === "health_coach"
                       ? "border-blue-300 bg-blue-50 shadow-md"
                       : "border-gray-200 bg-white hover:border-blue-200 hover:bg-blue-50/50"
                   }`}
-                  onClick={() => setDoctorType("general_practitioner")}
+                  onClick={() => setDoctorType("health_coach")}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
-                      setDoctorType("general_practitioner");
+                      setDoctorType("health_coach");
                     }
                   }}
-                  aria-label="Select General Practitioner"
-                  aria-pressed={doctorType === "general_practitioner"}
+                  aria-label="Select Health Coach"
+                  aria-pressed={doctorType === "health_coach"}
                 >
                   <div className="flex items-center space-x-3 w-full">
                     <div
                       className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        doctorType === "general_practitioner"
+                        doctorType === "health_coach"
                           ? "bg-blue-600"
                           : "bg-gray-100"
                       }`}
                     >
                       <Stethoscope
                         className={`w-5 h-5 sm:w-6 sm:h-6 ${
-                          doctorType === "general_practitioner"
+                          doctorType === "health_coach"
                             ? "text-white"
                             : "text-gray-600"
                         }`}
@@ -91,18 +91,18 @@ export default function Home() {
                     <div className="flex-1 min-w-0">
                       <h3
                         className={`font-semibold text-sm sm:text-base ${
-                          doctorType === "general_practitioner"
+                          doctorType === "health_coach"
                             ? "text-blue-800"
                             : "text-gray-800"
                         }`}
                       >
-                        General Practitioner
+                        Health Coach
                       </h3>
                       <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                        General health, symptoms, and medical advice
+                        General health, wellness, and lifestyle advice
                       </p>
                     </div>
-                    {doctorType === "general_practitioner" && (
+                    {doctorType === "health_coach" && (
                       <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                         <div className="w-2 h-2 bg-white rounded-full"></div>
                       </div>
@@ -112,33 +112,33 @@ export default function Home() {
 
                 <div
                   className={`relative p-3 sm:p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 min-h-[80px] sm:min-h-[100px] flex items-center ${
-                    doctorType === "gynecologist"
+                    doctorType === "pregnancy_coach"
                       ? "border-emerald-300 bg-emerald-50 shadow-md"
                       : "border-gray-200 bg-white hover:border-emerald-200 hover:bg-emerald-50/50"
                   }`}
-                  onClick={() => setDoctorType("gynecologist")}
+                  onClick={() => setDoctorType("pregnancy_coach")}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
-                      setDoctorType("gynecologist");
+                      setDoctorType("pregnancy_coach");
                     }
                   }}
-                  aria-label="Select Gynecologist"
-                  aria-pressed={doctorType === "gynecologist"}
+                  aria-label="Select Pregnancy Coach"
+                  aria-pressed={doctorType === "pregnancy_coach"}
                 >
                   <div className="flex items-center space-x-3 w-full">
                     <div
                       className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        doctorType === "gynecologist"
+                        doctorType === "pregnancy_coach"
                           ? "bg-emerald-600"
                           : "bg-gray-100"
                       }`}
                     >
                       <Heart
                         className={`w-5 h-5 sm:w-6 sm:h-6 ${
-                          doctorType === "gynecologist"
+                          doctorType === "pregnancy_coach"
                             ? "text-white"
                             : "text-gray-600"
                         }`}
@@ -147,18 +147,18 @@ export default function Home() {
                     <div className="flex-1 min-w-0">
                       <h3
                         className={`font-semibold text-sm sm:text-base ${
-                          doctorType === "gynecologist"
+                          doctorType === "pregnancy_coach"
                             ? "text-emerald-800"
                             : "text-gray-800"
                         }`}
                       >
-                        Gynecologist
+                        Pregnancy Coach
                       </h3>
                       <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                        Women&apos;s health, reproductive, and gynecological care
+                        Pregnancy support, prenatal care, and maternal health
                       </p>
                     </div>
-                    {doctorType === "gynecologist" && (
+                    {doctorType === "pregnancy_coach" && (
                       <div className="w-5 h-5 sm:w-6 sm:h-6 bg-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
                         <div className="w-2 h-2 bg-white rounded-full"></div>
                       </div>
@@ -178,9 +178,9 @@ export default function Home() {
                   onClick={handleStartChat}
                   className={`${primaryColor} ${primaryHoverColor} w-full py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 min-h-[48px] sm:min-h-[56px]`}
                   aria-label={`Start chatting with ${
-                    doctorType === "gynecologist"
-                      ? "gynecologist"
-                      : "general practitioner"
+                    doctorType === "pregnancy_coach"
+                      ? "pregnancy coach"
+                      : "health coach"
                   }`}
                 >
                   <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />

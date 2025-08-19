@@ -19,7 +19,7 @@ interface Message {
 interface ChatPageProps {
   messages: Message[];
   newMessage: string;
-  doctorType: "gynecologist" | "general_practitioner";
+  doctorType: "pregnancy_coach" | "health_coach";
   isLoading: boolean;
   isStreaming: boolean;
   streamingMessage: string;
@@ -38,7 +38,7 @@ interface ChatPageProps {
   // Chat props
   onNewMessageChange: (value: string) => void;
   onSendMessage: () => void;
-  onDoctorTypeChange: (type: "gynecologist" | "general_practitioner") => void;
+  onDoctorTypeChange: (type: "pregnancy_coach" | "health_coach") => void;
   onResetChat: () => void;
   onReloadChats: () => void;
   onKeyPress: (e: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -84,15 +84,15 @@ export default function ChatPage({
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   // Color scheme based on doctor type
-  const isGyno = doctorType === "gynecologist";
-  const primaryColor = isGyno ? "bg-emerald-600" : "bg-blue-600";
-  const primaryHoverColor = isGyno ? "hover:bg-emerald-700" : "hover:bg-blue-700";
-  const primaryTextColor = isGyno ? "text-emerald-600" : "text-blue-600";
-  const primaryBorderColor = isGyno ? "border-emerald-200" : "border-blue-200";
-  const primaryBgColor = isGyno ? "bg-emerald-50" : "bg-blue-50";
-  const doctorIcon = isGyno ? Heart : Stethoscope;
-  const doctorTitle = isGyno ? "Gynecologist" : "General Practitioner";
-  const doctorImage = isGyno ? "/gyno.png" : "/general.png";
+  const isPregnancyCoach = doctorType === "pregnancy_coach";
+  const primaryColor = isPregnancyCoach ? "bg-emerald-600" : "bg-blue-600";
+  const primaryHoverColor = isPregnancyCoach ? "hover:bg-emerald-700" : "hover:bg-blue-700";
+  const primaryTextColor = isPregnancyCoach ? "text-emerald-600" : "text-blue-600";
+  const primaryBorderColor = isPregnancyCoach ? "border-emerald-200" : "border-blue-200";
+  const primaryBgColor = isPregnancyCoach ? "bg-emerald-50" : "bg-blue-50";
+  const doctorIcon = isPregnancyCoach ? Heart : Stethoscope;
+  const doctorTitle = isPregnancyCoach ? "Pregnancy Coach" : "Health Coach";
+  const doctorImage = isPregnancyCoach ? "/pregnancy-coach.png" : "/health-coach.png";
 
   useEffect(() => {
     if (typeof window !== 'undefined' && messages.length === 0 && !hasToken && onLoadInitialChat) {
@@ -192,12 +192,12 @@ export default function ChatPage({
                   <select
                     value={doctorType}
                     onChange={(e) => {
-                      const newType = e.target.value as "gynecologist" | "general_practitioner";
+                      const newType = e.target.value as "pregnancy_coach" | "health_coach";
                       onDoctorTypeChange(newType);
-                      if (newType === "gynecologist") {
-                        router.push("/chat/gyno");
+                      if (newType === "pregnancy_coach") {
+                        router.push("/chat/pregnancy-coach");
                       } else {
-                        router.push("/chat/general");
+                        router.push("/chat/health-coach");
                       }
                     }}
                     disabled={isFetchingChats}
@@ -205,10 +205,10 @@ export default function ChatPage({
                       isFetchingChats ? "opacity-50" : ""
                     }`}
                   >
-                    <option value="general_practitioner">
-                      General Practitioner
+                    <option value="health_coach">
+                      Health Coach
                     </option>
-                    <option value="gynecologist">Gynecologist</option>
+                    <option value="pregnancy_coach">Pregnancy Coach</option>
                   </select>
                 </div>
               </div>
