@@ -120,3 +120,28 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Mobile-specific styles */
+@layer utilities {
+  /* Prevent zoom on input focus on iOS */
+  @media screen and (max-width: 768px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    textarea,
+    select {
+      font-size: 16px;
+    }
+  }
+  
+  /* Ensure proper viewport height on mobile */
+  .h-screen {
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
+  }
+  
+  /* Prevent body scroll when chat is open */
+  body.chat-open {
+    overflow: hidden;
+  }
+}

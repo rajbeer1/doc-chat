@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { ArrowLeft, Send } from "lucide-react";
 import PhoneVerificationModal from "./PhoneVerificationModal";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 interface Message {
   id: string;
@@ -73,23 +74,24 @@ export default function ChatPage({
   onLoadInitialChat,
   isFetchingChats = false,
 }: ChatPageProps) {
+  const router = useRouter();
   useEffect(() => {
-    if (messages.length === 0 && !hasToken && onLoadInitialChat) {
+    if (typeof window !== 'undefined' && messages.length === 0 && !hasToken && onLoadInitialChat) {
       console.log("onLoadInitialChat");
       onLoadInitialChat();
     }
   }, [messages.length, hasToken, onLoadInitialChat]);
 
   return (
-    <div className="min-h-screen bg-stone-50 flex flex-col relative">
-      {/* Chat Header */}
-      <div className="bg-white border-b border-stone-200 px-4 py-3">
+    <div className="h-screen bg-stone-50 flex flex-col relative">
+      {/* Chat Header - Fixed at top */}
+      <div className="bg-white border-b border-stone-200 px-4 py-3 flex-shrink-0">
         <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="sm"
-              onClick={onResetChat}
+              onClick={() => router.push("/")}
               className="text-stone-600"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -100,11 +102,14 @@ export default function ChatPage({
               <div className="flex items-center space-x-2">
                 <select
                   value={doctorType}
-                  onChange={(e) =>
-                    onDoctorTypeChange(
-                      e.target.value as "gynecologist" | "general_practitioner"
-                    )
-                  }
+                  onChange={(e) => {
+                    const newType = e.target.value as "gynecologist" | "general_practitioner";
+                    if (newType === "gynecologist") {
+                      router.push("/chat/gyno");
+                    } else {
+                      router.push("/chat/general");
+                    }
+                  }}
                   disabled={isFetchingChats}
                   className={`text-sm border border-stone-300 rounded px-2 py-1 ${
                     isFetchingChats ? "bg-stone-100 text-stone-500" : "bg-white"
@@ -137,8 +142,8 @@ export default function ChatPage({
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      {/* Messages - Scrollable area that takes remaining space */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0">
         <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-4">
           {isFetchingChats && messages.length === 0 && (
             <div className="flex justify-center items-center py-8">
@@ -156,13 +161,13 @@ export default function ChatPage({
               }`}
             >
               <div
-                className={`max-w-xs sm:max-w-sm lg:max-w-md px-4 py-2 rounded-lg ${
+                className={`max-w-[75%] sm:max-w-sm lg:max-w-md px-4 py-2 rounded-lg ${
                   message.sender === "user"
                     ? "bg-stone-600 text-white"
                     : "bg-white border border-stone-200 text-stone-900"
                 }`}
               >
-                <p className="text-sm sm:text-base">{message.text}</p>
+                <p className="text-sm sm:text-base break-words">{message.text}</p>
                 <p
                   className={`text-xs mt-1 ${
                     message.sender === "user"
@@ -182,8 +187,8 @@ export default function ChatPage({
           {/* Streaming Message */}
           {isStreaming && (
             <div className="flex justify-start">
-              <div className="max-w-xs sm:max-w-sm lg:max-w-md px-4 py-2 rounded-lg bg-white border border-stone-200 text-stone-900">
-                <p className="text-sm sm:text-base">
+              <div className="max-w-[75%] sm:max-w-sm lg:max-w-md px-4 py-2 rounded-lg bg-white border border-stone-200 text-stone-900">
+                <p className="text-sm sm:text-base break-words">
                   {streamingMessage || "Typing..."}
                 </p>
               </div>
@@ -194,7 +199,8 @@ export default function ChatPage({
         </div>
       </div>
 
-      <div className="bg-white border-t border-stone-200 px-4 py-3">
+      {/* Input Area - Fixed at bottom */}
+      <div className="bg-white border-t border-stone-200 px-4 py-3 flex-shrink-0">
         <div className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto">
           <div className="flex space-x-2">
             <Input
@@ -211,7 +217,7 @@ export default function ChatPage({
             <Button
               onClick={onSendMessage}
               disabled={!newMessage.trim() || isLoading || isFetchingChats}
-              className="bg-stone-600 hover:bg-stone-700"
+              className="bg-stone-600 hover:bg-stone-700 flex-shrink-0"
             >
               <Send className="w-4 h-4" />
             </Button>
