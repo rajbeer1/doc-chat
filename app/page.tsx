@@ -155,7 +155,7 @@ export default function Home() {
                         Gynecologist
                       </h3>
                       <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                        Women's health, reproductive, and gynecological care
+                        Women&apos;s health, reproductive, and gynecological care
                       </p>
                     </div>
                     {doctorType === "gynecologist" && (
