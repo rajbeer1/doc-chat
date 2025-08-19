@@ -31,18 +31,9 @@ export default function GynoChatPage() {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    if (isClient && !chatState.isAuthenticated && !chatService.getToken()) {
-      router.push("/");
-    }
-  }, [isClient, chatState.isAuthenticated, chatService, router]);
 
   if (!isClient) {
     return <LoadingSpinner />;
-  }
-
-  if (!chatState.isAuthenticated && !chatService.getToken()) {
-    return null; 
   }
 
   return (

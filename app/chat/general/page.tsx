@@ -31,19 +31,11 @@ export default function GeneralChatPage() {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    if (isClient && !chatState.isAuthenticated && !chatService.getToken()) {
-      router.push("/");
-    }
-  }, [isClient, chatState.isAuthenticated, chatService, router]);
 
   if (!isClient) {
     return <LoadingSpinner />;
   }
 
-  if (!chatState.isAuthenticated && !chatService.getToken()) {
-    return null; 
-  }
 
   return (
     <div className="min-h-screen bg-stone-50">
